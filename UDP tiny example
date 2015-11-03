@@ -1,0 +1,53 @@
+
+udpServer.c
+
+
+#include "def"
+main()
+{
+   int   sd;
+   struct   sockaddr_in server;
+   char buf[512];
+   int rc;
+
+   server.sin_family = AF_INET;
+   server.sin_addr.s_addr = htonl(INADDR_ANY);
+   server.sin_port = htons(12345);
+
+   sd = socket (AF_INET,SOCK_DGRAM,0);
+
+   bind ( sd, (SA *) &server, sizeof(server));
+   
+   for(;;){
+      rc = recv (sd, buf, sizeof(buf), 0);
+      buf[rc]= (char) NULL;
+      printf("Received: %s\n", buf);
+   }
+}
+
+
+
+udpClient.c
+
+
+#include "def"
+main(..)
+{
+
+        int	sd;
+	struct	sockaddr_in server;
+	struct  hostent *hp, *gethostbyname();
+
+	sd = socket (AF_INET,SOCK_DGRAM,0);
+
+	server.sin_family = AF_INET;
+	hp = gethostbyname(argv[1]);
+	bcopy ( hp->h_addr, &(server.sin_addr.s_addr), hp->h_length);
+	server.sin_port = htons(12345);
+
+        for (;;) {
+	   sendto(sd, "HI",2, 0, (SA *) &server, sizeof(server));
+           sleep(2);
+        }
+
+}
