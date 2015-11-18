@@ -32,7 +32,11 @@ public:
     unsigned int getOffest();                   //get offset
     void updateSeqNum();                        //add seq num by WIN_NUM
     void display();
+    void setACK_cnt(char cnt);                  //set ack count
+    char getACK_cnt();                          //get ack count
+    void incACK_cnt();                          //increase ack count
 private:
+    char ack_cnt;                               //ack_cnt used for fast retransmit
     char* pkt_p;                                //data pointer
     unsigned int seq_num;                       //sequence number
     unsigned int content_size;                  //content size

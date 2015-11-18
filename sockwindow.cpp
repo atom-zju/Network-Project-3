@@ -6,7 +6,7 @@
 #include <string>
 #include <zlib.h>
 
-SockWindow::SockWindow():seq_num(),offset(0),win_stat(empty)
+SockWindow::SockWindow():seq_num(),offset(0),win_stat(empty),ack_cnt(0)
 {
     //malloc memory to data pointer
     pkt_p=(char*)malloc(PKT_SIZE);
@@ -76,6 +76,21 @@ void SockWindow::setWinType(WinType win_t)
 WinType SockWindow::getWinType()
 {
     return win_type;
+}
+
+void SockWindow::setACK_cnt(char cnt)
+{
+  ack_cnt = cnt;
+}
+
+char SockWindow::getACK_cnt()
+{
+  return ack_cnt;
+}
+
+void SockWindow::incACK_cnt()
+{
+  ack_cnt++;
 }
 
 void SockWindow::addHeader()

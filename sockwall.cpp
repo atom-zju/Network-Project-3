@@ -69,6 +69,7 @@ void SockWall::setStatSent(int idx)
     gettimeofday(&tv,0);
     window[idx].setTimestamp(tv);
     window[idx].setStat(sent);
+    window[idx].setACK_cnt(0);
 }
 
 int SockWall::loadWin()
@@ -89,7 +90,7 @@ int SockWall::loadWin()
             //seq_num++;
             window[idx].setOffset(file_pos);
             window[idx].setStat(loaded);
-            //file_pos+=size;
+	    //file_pos+=size;
 	    if(file.eof()){
 	      //reach the end of file
 	      file_pos=file_length;
@@ -112,6 +113,14 @@ int SockWall::loadWin()
             loaded_cnt++;
         }
         else if(window[idx].getStat()==sent){
+	  //check ack_cnt ---  decide whether to fast retransmit
+	  if(window[idx].getACK_cnt()>MAX_ACK_CNT){
+	    //fast retransmit
+	    std::cout<<"Fast retransmit reload."<<std::endl;
+	    window[idx].setStat(loaded);
+	    loaded_cnt++;
+	    continue;
+	  }
             //check if the window is timeout
             struct timeval tv,timestamp=window[idx].getTimestamp();
             gettimeofday(&tv,0);
@@ -212,6 +221,7 @@ int SockWall::handlePkt(char *pkt, int size)
        window[idx].updateSeqNum();
    }
    min_seq_idx=idx;
+   window[min_seq_idx].incACK_cnt();
    std::cout<<"acked upto window ["<<window[min_seq_idx].getSeqNum()<<"]"<<std::endl;
 
    return 1;
