@@ -51,5 +51,12 @@ Algorithms:
 Properties/Features:
 ====================
 
-How to Run the Code:
+Running the Code:
 ====================
+The syntax for launching our code is the same as the command given in the design document,
+
+To launch the sender program:
+	sender -r <recv_host>:<recv_port> -f <filename>
+
+To launch the receiver program:
+	receiver -p <recv_port>
