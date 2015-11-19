@@ -4,12 +4,12 @@ CFLAGS = -Wall -c -g
 LFLAGS =
 Libs = -lz
 
-RECV = receiver
-SEND = sender
-RECV_SRC = receiver.cpp sockwall.cpp sockwindow.cpp
-SEND_SRC = sender.cpp sockwall.cpp sockwindow.cpp
-RECV_OBJ = receiver.o sockwall.o sockwindow.o
-SEND_OBJ = sender.o sockwall.o sockwindow.o
+RECV = recvfile
+SEND = sendfile
+RECV_SRC = recvfile.cpp sockwall.cpp sockwindow.cpp
+SEND_SRC = sendfile.cpp sockwall.cpp sockwindow.cpp
+RECV_OBJ = recvfile.o sockwall.o sockwindow.o
+SEND_OBJ = sendfile.o sockwall.o sockwindow.o
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -26,10 +26,10 @@ $(SEND_OBJS): global.h
 
 $(RECV_OBJS): global.h
 
-receiver.o :  sockwindow.h sockwall.h
-sender.o :  sockwindow.h sockwall.h
+recvfile.o :  sockwindow.h sockwall.h
+sendfile.o :  sockwindow.h sockwall.h
 sockwall.o : sockwindow.h sockwall.h
 sockwindow.o : sockwindow.h
 
 clean:
-	rm -f *.o receiver sender
+	rm -f *.o recvfile sendfile
