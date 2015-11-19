@@ -54,11 +54,6 @@ the checksum value is 128 bits, two 64-bit fields were needed.
 
 Data: The contents of the packet being sent.
 
-
-Protocols:
-====================
-
-
 Algorithms:
 ====================
 sliding window, 
