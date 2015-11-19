@@ -54,9 +54,24 @@ the checksum value is 128 bits, two 64-bit fields were needed.
 
 Data: The contents of the packet being sent.
 
-Algorithms:
+Algorithm:
 ====================
-sliding window, 
+We implemented a sliding window algorithm for our protocol on both the sender and receiver
+sides. The sender program maintains an array of pointers, of a fixed size, that point to
+packets. Each pointer has a status associated with it, representing if the packet at this 
+location is empty, has had data from the send file loaded in to it, if it has been sent, and
+if an ACK message associated with this packet has been received. As packets are acknowledged, the
+window slides to view only a portion of the array, representing those packets within that
+window range. On the receiving end, a similar array of window pointers is maintained; based
+on the information in the packet header, a received packet is first checked to see if it has
+been mangled in the transmission process, and if so is discarded. If it is intact, the window
+space associated with that sequence number is checked; if that message has already been received,
+then the new received message is likewise discarded; if not, a pointer to the packet is added to
+the array, and the status of that window is changed to represent the received packet. An ACK
+message is then sent to the sender. If an ACK message is not received by the sender within the
+proper amount of time, a timeout is detected, and that packet is retransmitted; fast retransmission
+is also used when three ACK messages are received in a row. When the last active window of the sender
+is acknowledged, the program terminates. 
 
 Properties/Features:
 ====================
