@@ -60,7 +60,11 @@ sliding window,
 
 Properties/Features:
 ====================
-fast rexmit, 3 acks in a row, immediately resend; otherwise we wait for timeout, improve performance 
+We added and implemented the fast retransmission feature into our protocol. Instead of necessarily
+waiting for a missing acknowledgement message from the receiver, and thus wait for a timeout in
+order to resend the packet, we implemented fast transmission so that if the sender receives three
+ACK messages in a row, it immediately resends the packet. This allows for faster recovery from
+timeout situations, and thus increases our performance. 
 
 Running the Code:
 ====================
