@@ -70,6 +70,7 @@ void SockWall::setStatSent(int idx)
     window[idx].setTimestamp(tv);
     window[idx].setStat(sent);
     window[idx].setACK_cnt(0);
+    std::cout<<"[send data] "<<window[idx].getOffest()<<std::endl;
 }
 
 int SockWall::loadWin()
@@ -78,12 +79,12 @@ int SockWall::loadWin()
     for(int idx=min_seq_idx,i=0; i<WIN_NUM; i++,idx=(idx+1)%WIN_NUM){
         if(window[idx].getStat()==empty && wall_stat==working){
             //find an empty window, fill it with file content
-            std::cout<<"Loading window ["<<window[idx].getSeqNum()<<"]"<<std::endl;
+            //std::cout<<"Loading window ["<<window[idx].getSeqNum()<<"]"<<std::endl;
             //getchar();
             file.read(window[idx].getDataPtr()+HEADER_LEN,PKT_SIZE-HEADER_LEN);
 
 	    std::streamsize size= file.gcount();
-            std::cout<<"got "<<size <<" characters"<<std::endl;
+            //std::cout<<"got "<<size <<" characters"<<std::endl;
             //getchar();
             window[idx].setContentSize(size);
             //window[idx].setSeqNum(seq_num);
@@ -94,7 +95,7 @@ int SockWall::loadWin()
 	    if(file.eof()){
 	      //reach the end of file
 	      file_pos=file_length;
-	      std::cout<<"Reaching to end of file."<<std::endl;
+	      //std::cout<<"Reaching to end of file."<<std::endl;
 	      //getchar();
 	      window[idx].setWinType(end);
 	      wall_stat=ending;
@@ -104,8 +105,8 @@ int SockWall::loadWin()
 	      window[idx].setWinType(normal);
 	    }
 
-	    std::cout << "file_pos:\t"<<file_pos << "\n";
-	    std::cout << "file_length:\t"<<file_length << "\n";
+	    //std::cout << "file_pos:\t"<<file_pos << "\n";
+	    //std::cout << "file_length:\t"<<file_length << "\n";
             window[idx].addHeader();
             loaded_cnt++;
         }
@@ -116,7 +117,7 @@ int SockWall::loadWin()
 	  //check ack_cnt ---  decide whether to fast retransmit
 	  if(window[idx].getACK_cnt()>MAX_ACK_CNT){
 	    //fast retransmit
-	    std::cout<<"Fast retransmit reload."<<std::endl;
+	    //std::cout<<"Fast retransmit reload."<<std::endl;
 	    window[idx].setStat(loaded);
 	    loaded_cnt++;
 	    continue;
@@ -195,7 +196,7 @@ int SockWall::handlePkt(char *pkt, int size)
     contentLen = size-HEADER_LEN;
     if(!checkValid()){
       //if pkt is mangled, discard
-      std::cout<<"ACK PKT is mangled, discard."<<std::endl;
+      std::cout<<"[ack corrupt packet]"<<std::endl;
       return -1;
     }
 
@@ -318,7 +319,7 @@ char* SockWall::handlePkt_recv(int recv_size, int &return_size)
     contentLen=recv_size-HEADER_LEN;
     if(!checkValid()){
         //if pkt is mangled, discard
-      std::cout<<"PKT is mangled, discard."<<std::endl;
+      std::cout<<"[recv corrupt packet]"<<std::endl;
       return NULL;
     }
     //determine pkt type can be name, content, end
@@ -362,9 +363,14 @@ char* SockWall::handlePkt_recv(int recv_size, int &return_size)
             if(idx>=0){
                 if(window[idx].getStat()==empty){
                     //if find a corresponding window, deliver it by swapping the pointer
-                    std::cout<<"loaded window ["<<window[idx].getSeqNum()<<"]"<<std::endl;
+                    //std::cout<<"loaded window ["<<window[idx].getSeqNum()<<"]"<<std::endl;
                     //getchar();
+		  
 		    window[idx].setOffset(*((unsigned int*)swap_buf+1));
+		    if(idx==min_seq_idx)
+		      std::cout<<"[recv data] "<<window[idx].getOffest()<<" ACCEPTED(in-order)"<<std::endl;
+		    else
+		      std::cout<<"[recv data] "<<window[idx].getOffest()<<" ACCEPTED(out-of-order)"<<std::endl;
                     deliverPkt2Win(idx);
                     if(win_t==end){
                         window[idx].setWinType(end);
@@ -380,6 +386,7 @@ char* SockWall::handlePkt_recv(int recv_size, int &return_size)
             }
             else{
                 //pkt seq num does not fall into window, discard
+	      std::cout<<"[recv data] "<<*((unsigned int*)swap_buf+1)<<"  IGNORED"<<std::endl;
             }
             break;
         }

@@ -42,7 +42,7 @@ int main(int argc, char** argv)
     sin.sin_addr.s_addr = htonl(INADDR_ANY);
     sin.sin_port = htons((unsigned short)port_str);
 
-    cout<<"port: "<<port_str<<endl;
+    //cout<<"port: "<<port_str<<endl;
 
     //create socket
     if((sock = socket(AF_INET,SOCK_DGRAM,0))<0){
@@ -66,7 +66,7 @@ int main(int argc, char** argv)
         pkt_handle = sock_wall.getRecvBuf();
         int recv_size,return_size;
 
-        cout<<"start to recvfrom()"<<endl;
+        //cout<<"start to recvfrom()"<<endl;
         recv_size = recvfrom(sock,pkt_handle,PKT_SIZE,0,(struct sockaddr *)&remaddr,&addrlen);
 //        std::cout<<"==================================\n"<<"Recv Size:"<<recv_size<<std::endl;
 //        std::cout<<"Recv Content:\n"<<"=================================="<<std::endl;
@@ -75,7 +75,7 @@ int main(int argc, char** argv)
         pkt_handle = sock_wall.handlePkt_recv(recv_size,return_size);
 	if(pkt_handle == NULL)
 	  continue;
-        cout<<"start to sendto()"<<endl;
+        //cout<<"start to sendto()"<<endl;
         sendto(sock,pkt_handle,return_size,0,(struct sockaddr *)&remaddr,addrlen);
     }
     return 0;

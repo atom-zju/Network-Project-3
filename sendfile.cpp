@@ -117,7 +117,7 @@ int main(int argc, char** argv)
 
         //if sock has something to read
         if(FD_ISSET(sock, &read_set)){
-            cout<<"start to recvfrom()"<<endl;
+	  //cout<<"start to recvfrom()"<<endl;
             int recv_size = recvfrom(sock,read_buf,PKT_SIZE,0,(struct sockaddr *)&sin,&addrlen);
             sock_wall.handlePkt(read_buf,recv_size);
         }
@@ -127,7 +127,7 @@ int main(int argc, char** argv)
             for(int i=0;i<pending_win;i++){
                 int send_size;
                 int win_idx = sock_wall.makePkt(send_pkt,send_size);
-                cout<<"start to sendto()"<<endl;
+                //cout<<"start to sendto()"<<endl;
                 sendto(sock,send_pkt,send_size,0,(struct sockaddr *)&sin,addrlen);
                 sock_wall.setStatSent(win_idx);
             }

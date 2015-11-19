@@ -1,11 +1,11 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#define PKT_SIZE    64000
-#define WIN_NUM     15
-#define TIMEOUT     500
+#define PKT_SIZE    12000
+#define WIN_NUM     80
+#define TIMEOUT     10
 #define HEADER_LEN  24
-#define LAST_TRY_TIME 50
+#define LAST_TRY_TIME 5
 #define MAX_ACK_CNT 3
 
 //                          header format
