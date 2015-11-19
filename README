@@ -25,38 +25,54 @@ Packet Format:
  |                             Data                            |
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-PKT Type:
+PKT Type: This field denotes the type of packet being transmitted. 
+There are three possible packet types: begin, normal, and end. Begin 
+type contains the file name, and is the first packet to arrive 
+to the receiver program. Normal type contains the packet content, and
+the End type is the last packet to arrive to the receiver, containing 
+the last of the packet content.  
 
-Content Len:
+Content Len: This value gives the length of the data of the packet, excluding
+the length of the packet header. 
 
-Offset:
+Offset: The offset field represents the offset in to the sending file 
+that the content of the packet holds. 
 
-Sequence Number:
+Sequence Number: This field contains the number of the current window being transmitted.
 
-Acknowledgement Number:
+Acknowledgement Number: This is a field exclusively used by the receiver 
+program. It contains the number of the window of the packet that was just
+received from the sender, and uses this field to acknowledge that windows' 
+reception and writing to file. 
 
-Checksum:
+Checksum: This field holds the checksum value calculated from the header, 
+minus the checksum fields, and the entire sending file. This is used to
+detect if a packet has been mangled in the transmission process.
 
-Checksum(Cont.):
+Checksum(Cont.): A continuation of the first checksum field; because 
+the checksum value is 128 bits, two 64-bit fields were needed.
 
-Data:
+Data: The contents of the packet being sent.
 
 
 Protocols:
 ====================
 
+
 Algorithms:
 ====================
+sliding window, 
 
 Properties/Features:
 ====================
+fast rexmit, 3 acks in a row, immediately resend; otherwise we wait for timeout, improve performance 
 
 Running the Code:
 ====================
-The syntax for launching our code is the same as the command given in the design document,
+The syntax for launching our code is the same as the commands given in the design document.
 
 To launch the sender program:
-	sender -r <recv_host>:<recv_port> -f <filename>
+	sendfile -r <recv_host>:<recv_port> -f <filename>
 
 To launch the receiver program:
-	receiver -p <recv_port>
+	recvfile -p <recv_port>
