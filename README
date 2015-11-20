@@ -3,6 +3,19 @@ Group Members:
         Boyang Bai   - bb26
 	Runhua Zhang - rz18
 	Riley Gibson - rdg2
+	
+File Description:
+====================
+recvfile.cpp	the source code for receiver program
+sendfile.cpp	the source code for sender program
+sockwall.cpp	the source code for socket manage class
+sockwall.h	the header file for sockwall class
+sockwindow.cpp	the source code for socket window class
+sockwindow.h	the header file for sockwindow class
+global.h	the header file that defines some program parameters
+TestStrategy	test strategy description
+Makefile	makefile for compiling
+test/		the floder contains our test files
 
 Packet Format:
 ====================
