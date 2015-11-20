@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <zlib.h>
 
-SockWall::SockWall(const char* file_path, WallType wt):min_seq_idx(0),file_pos(0), wall_stat(working),finished(false),wall_type(wt),seq_num(0)
+SockWall::SockWall(const char* file_path, WallType wt):min_seq_idx(0),file_pos(0), wall_stat(working),finished(false),seq_num(0),wall_type(wt)
 {
     //set seq num for each window
     for(int i=0;i<WIN_NUM;i++){
@@ -55,6 +55,7 @@ SockWall::~SockWall()
 {
     //close the file descriptor
     file.close();
+    std::cout<<"[completed]"<<std::endl;
 }
 
 void SockWall::setStatSent(int idx)
@@ -278,7 +279,7 @@ bool SockWall::tryWriteFile()
 {
     //std::cout<<"start to try write file()"<<std::endl;
     bool changed=false;
-    int i,idx,j;
+    int i,idx;
     for(idx=min_seq_idx,i=0;window[idx].getStat()==loaded && i<WIN_NUM;idx=(idx+1)%WIN_NUM,i++){
     //std::cout<<"# of window to be write:"<<i<<std::endl;
     //getchar();

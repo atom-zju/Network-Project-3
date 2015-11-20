@@ -1,6 +1,6 @@
 
 CC = g++
-CFLAGS = -Wall -c -g
+CFLAGS = -Wno-reorder -c -g
 LFLAGS =
 Libs = -lz
 

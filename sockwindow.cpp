@@ -6,7 +6,7 @@
 #include <string>
 #include <zlib.h>
 
-SockWindow::SockWindow():seq_num(),offset(0),win_stat(empty),ack_cnt(0)
+SockWindow::SockWindow():seq_num(),offset(0),ack_cnt(0),win_stat(empty)
 {
     //malloc memory to data pointer
     pkt_p=(char*)malloc(PKT_SIZE);
